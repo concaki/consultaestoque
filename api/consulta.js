@@ -13,8 +13,8 @@ export default async function handler(req, res) {
     };
 
     const [produtoResp, estoqueResp] = await Promise.all([
-      fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]="${sku}"`, { headers }),
-      fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]="${sku}"`, { headers }),
+      fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`, { headers }),
+      fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`, { headers }),
     ]);
 
     const produto = await produtoResp.json();
