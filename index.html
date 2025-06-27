@@ -49,7 +49,7 @@
         return;
       }
 
-      const res = await fetch("/consulta?sku=" + encodeURIComponent(sku));
+      const res = await fetch(`/api/consulta?sku=${encodeURIComponent(sku)}`)
       const json = await res.json();
 
       const produto = json.produto.data[0];
