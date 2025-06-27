@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     // Requisição para os dados do produto
-    const produtoRes = await fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]="${sku}"`, {
+    const produtoRes = await fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const produto = await produtoRes.json();
 
     // Requisição para o estoque
-    const estoqueRes = await fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]="${sku}"`, {
+    const estoqueRes = await fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
