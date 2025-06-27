@@ -1,32 +1,30 @@
-// api/consulta.js
+import fs from 'fs';
+import path from 'path';
+
 export default async function handler(req, res) {
   const { sku } = req.query;
-  const token = process.env.BLING_TOKEN;
 
-  if (!sku) {
-    return res.status(400).json({ error: 'SKU é obrigatório.' });
+  const tokenPath = path.join('/tmp', 'token.json');
+  let accessToken = process.env.BLING_TOKEN;
+
+  if (fs.existsSync(tokenPath)) {
+    const data = JSON.parse(fs.readFileSync(tokenPath, 'utf-8'));
+    if (data?.access_token) accessToken = data.access_token;
   }
 
   try {
-    // Requisição para os dados do produto
-    const produtoRes = await fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    const produto = await produtoRes.json();
+    const headers = {
+      Authorization: `Bearer ${accessToken}`
+    };
 
-    // Requisição para o estoque
-    const estoqueRes = await fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const produtoRes = await fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`, { headers });
+    const estoqueRes = await fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`, { headers });
+
+    const produto = await produtoRes.json();
     const estoque = await estoqueRes.json();
 
     res.status(200).json({ produto, estoque });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Erro ao buscar dados.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao consultar Bling', details: err.message });
   }
 }
