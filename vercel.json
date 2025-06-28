@@ -6,6 +6,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "api/refresh.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "index.html",
       "use": "@vercel/static"
     }
@@ -16,11 +20,12 @@
       "dest": "api/consulta.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "/api/refresh",
+      "dest": "api/refresh.js"
     },
     {
-      "src": "/api/(.*)", 
-      "dest": "/api/$1.js"
-  }
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
 }
