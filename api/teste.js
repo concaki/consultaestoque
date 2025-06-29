@@ -7,10 +7,10 @@ const redis = new Redis({
 
 export default async function handler(req, res) {
   try {
-    await redis.set("teste", "funcionando");
-    const result = await redis.get("teste");
-    res.status(200).json({ result });
+    await redis.set("teste", "ok");
+    const valor = await redis.get("teste");
+    res.status(200).json({ success: true, valor });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ success: false, error: e.message });
   }
 }
