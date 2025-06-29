@@ -19,22 +19,18 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/consulta",
-      "dest": "api/consulta.js"
-    },
-    {
-      "src": "/api/refresh",
-      "dest": "api/refresh.js"
-    },
-    {
-      "src": "/api/teste",
-      "dest": "api/teste.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/api/consulta", "dest": "api/consulta.js" },
+    { "src": "/api/refresh", "dest": "api/refresh.js" },
+    { "src": "/api/teste", "dest": "api/teste.js" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
-  "buildCommand": "npm install"
+  "functions": {
+    "api/*.js": {
+      "includeFiles": [
+        "package.json",
+        "package-lock.json",
+        "node_modules/**"
+      }
+    }
+  }
 }
