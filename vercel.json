@@ -2,15 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/consulta.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/refresh.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/teste.js",
+      "src": "api/*.js",
       "use": "@vercel/node"
     },
     {
@@ -23,14 +15,5 @@
     { "src": "/api/refresh", "dest": "api/refresh.js" },
     { "src": "/api/teste", "dest": "api/teste.js" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "functions": {
-    "api/*.js": {
-      "includeFiles": [
-        "package.json",
-        "package-lock.json",
-        "node_modules/**"
-      }
-    }
-  }
+  ]
 }
