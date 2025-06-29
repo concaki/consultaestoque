@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const sku = req.query.sku;
-  const token = process.env.BLING_TOKEN;
+  const token = process.env.BLING_ACCESS_TOKEN; // Corrigido aqui
 
   if (!sku || !token) {
     return res.status(400).json({ error: 'SKU ou Token não informado' });
