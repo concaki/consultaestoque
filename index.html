@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Estoque</title>
+  <style>
+    body {
+      background: #000;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      width: 250px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 1rem;
+      background: black;
+      color: yellow;
+      border: 1px solid yellow;
+      cursor: pointer;
+    }
+
+    #resultado {
+      margin-top: 40px;
+    }
+
+    .resultado-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .imagem {
+      flex: 0 0 auto;
+    }
+
+    .estoques {
+      text-align: left;
+    }
+
+    .estoque {
+      margin: 15px 0;
+      font-size: 1.3rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Mercadão da Informática</h1>
+  <h2>Consulta de Estoque</h2>
+  <input type="text" id="sku" placeholder="Digite o SKU do produto">
+  <button onclick="consultar()">Pesquisar</button>
+  <button onclick="limpar()">Limpar</button>
+  <div id="resultado"></div>
+
+  <script>
+    async function consultar() {
+      const sku = document.getElementById("sku").value.trim();
+      if (!sku) {
+        alert("Digite um SKU para iniciar");
+        return;
+      }
+
+      const res = await fetch(`/api/consulta?sku=${encodeURIComponent(sku)}`)
+      const json = await res.json();
+
+      //TODO: Remover depois
+      console.log(json);
+
+      const produto = json.produto.data[0];
+      const estoques = json.estoque.data[0]?.depositos || [];
+
+      const nomes = {
+        '14887828271': 'Matriz',
+        '12627098265': 'Grécia',
+        '14886514465': 'Otto',
+        '14886786082': 'Antonio',
+        '14887584699': 'Country',
+        '14888288509': 'Cestto Protasio'
+      };
+
+      let html = '<h2>' + produto.nome + '</h2>';
+      html += '<div class="resultado-container">';
+      html += '<div class="imagem"><img src="' + produto.imagemURL + '" width="300"></div>';
+      html += '<div class="estoques">';
+
+      const ordem = Object.keys(nomes);
+      ordem.forEach(id => {
+        const d = estoques.find(e => e.id == id);
+        if (d) {
+          let cor = d.saldoFisico <= 1 ? 'red' : d.saldoFisico <= 3 ? 'yellow' : 'lightgreen';
+          html += '<div class="estoque" style="color:' + cor + ';"><strong>' +
+            nomes[id] + ':</strong> ' + d.saldoFisico + ' un</div>';
+        }
+      });
+
+      html += '</div></div>';
+      html += '<br><strong>Preço:</strong> R$ ' + produto.preco.toFixed(2);
+      document.getElementById("resultado").innerHTML = html;
+    }
+
+    function limpar() {
+      document.getElementById("sku").value = "";
+      document.getElementById("resultado").innerHTML = "";
+    }
+  </script>
+</body>
+
+</html>
