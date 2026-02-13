@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Consulta de Estoque</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: #000;
@@ -15,8 +16,10 @@
 
     input {
       padding: 10px;
-      width: 250px;
+      width: 90%;
+      max-width: 300px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
 
     button {
@@ -37,13 +40,17 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 40px;
+      gap: 20px;
       margin-top: 20px;
       flex-wrap: wrap;
+      padding: 0 10px;
     }
 
-    .imagem {
-      flex: 0 0 auto;
+    .imagem img {
+      max-width: 100%;
+      height: auto;
+      width: 300px;
+      /* flex: 0 0 auto; */
     }
 
     .estoques {
@@ -53,6 +60,19 @@
     .estoque {
       margin: 15px 0;
       font-size: 1.3rem;
+    }
+
+    @media (max-width: 600px) {
+      .estoque {
+        font-size: 1.1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      button {
+        margin-top: 10px;
+        width: 45%;
+      }
     }
   </style>
 </head>
