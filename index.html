@@ -64,6 +64,7 @@
   <button onclick="consultar()">Pesquisar</button>
   <button onclick="limpar()">Limpar</button>
   <div id="resultado"></div>
+  <audio id="audioAlerta" src="https://www.soundjay.com/buttons_c2026/sounds/button-3.mp3" preload="auto"></audio>
 
   <script>
     async function consultar() {
@@ -99,14 +100,29 @@
       html += '<div class="estoques">';
 
       const ordem = Object.keys(nomes);
+        let temEstoqueCritico = false; // Variável de controle
+
       ordem.forEach(id => {
         const d = estoques.find(e => e.id == id);
-        if (d) {
-          let cor = d.saldoFisico <= 1 ? 'red' : d.saldoFisico <= 3 ? 'yellow' : 'lightgreen';
-          html += '<div class="estoque" style="color:' + cor + ';"><strong>' +
-            nomes[id] + ':</strong> ' + d.saldoFisico + ' un</div>';
-        }
-      });
+      if (d) {
+        let cor = d.saldoFisico <= 1 ? 'red' : d.saldoFisico <= 3 ? 'yellow' : 'lightgreen';
+    
+         // Se encontrar algum estoque em vermelho, marca como verdadeiro
+      if (cor === 'red') {
+        temEstoqueCritico = true;
+      }
+
+      html += '<div class="estoque" style="color:' + cor + ';"><strong>' +
+      nomes[id] + ':</strong> ' + d.saldoFisico + ' un</div>';
+  }
+});
+
+// Se houver algum item crítico, toca o som
+if (temEstoqueCritico) {
+  document.getElementById("audioAlerta").play().catch(e => {
+    console.log("O navegador bloqueou o áudio. Interaja com a página primeiro.");
+  });
+}
 
       html += '</div></div>';
       html += '<br><strong>Preço:</strong> R$ ' + produto.preco.toFixed(2);
