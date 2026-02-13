@@ -67,12 +67,16 @@
   <audio id="audioAlerta" src="https://www.soundjay.com/buttons_c2026/sounds/button-3.mp3" preload="auto"></audio>
 
   <script>
+    let timerLimpeza; // Variável para controlar o tempo de 5 segundos
+    
     async function consultar() {
       const sku = document.getElementById("sku").value.trim();
       if (!sku) {
         alert("Digite um SKU para iniciar");
         return;
       }
+
+      clearTimeout(timerLimpeza);
 
       const res = await fetch(`/api/consulta?sku=${encodeURIComponent(sku)}`)
       const json = await res.json();
@@ -129,9 +133,14 @@ if (temEstoqueCritico) {
       document.getElementById("resultado").innerHTML = html;
     }
 
+    timerLimpeza = setTimeout(() => {
+        limpar(); // Chama a função que limpa o resultado e o SKU
+      }, 5000); // 5000 milissegundos = 5 segundos
+
     function limpar() {
       document.getElementById("sku").value = "";
       document.getElementById("resultado").innerHTML = "";
+      document.getElementById("sku").focus(); // Deixa pronto para a próxima bipagem
     }
   </script>
 </body>
