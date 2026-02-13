@@ -1,24 +1,35 @@
-export default async function handler(req, res) {
-  const sku = req.query.sku;
-  const token = process.env.BLING_ACCESS_TOKEN; // Corrigido aqui
+import { fetchBling } from '../lib/bling.js';
 
-  if (!sku || !token) {
-    return res.status(400).json({ error: 'SKU ou Token não informado' });
+export default async function handler(req, res) {
+  const { sku } = req.query;
+
+  if (!sku) {
+    return res.status(400).json({ error: 'SKU não informado' });
   }
 
   try {
-    const headers = {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
-
     const [produtoResp, estoqueResp] = await Promise.all([
-      fetch(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`, { headers }),
-      fetch(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`, { headers }),
+      fetchBling(`https://api.bling.com.br/Api/v3/produtos?i&codigos[]=${sku}`),
+      fetchBling(`https://api.bling.com.br/Api/v3/estoques/saldos?i&codigos[]=${sku}`),
     ]);
 
-    const produto = await produtoResp.json();
-    const estoque = await estoqueResp.json();
+    if (!produtoResp.ok || !estoqueResp.ok) {
+      if (produtoResp.status === 401 || estoqueResp.status === 401) {
+        return res.status(401).json({ error: 'Erro de autenticação com o Bling mesmo após refresh.' });
+      }
+    }
+
+    if (!produtoResp.ok) {
+      const err = await produtoResp.text();
+      console.error('Erro produtos:', err);
+    }
+    if (!estoqueResp.ok) {
+      const err = await estoqueResp.text();
+      console.error('Erro estoque:', err);
+    }
+
+    const produto = produtoResp.ok ? await produtoResp.json() : { data: [] };
+    const estoque = estoqueResp.ok ? await estoqueResp.json() : { data: [] };
 
     res.status(200).json({ produto, estoque });
   } catch (e) {
