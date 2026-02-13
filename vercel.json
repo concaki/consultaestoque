@@ -11,9 +11,25 @@
     }
   ],
   "routes": [
-    { "src": "/api/consulta", "dest": "api/consulta.js" },
-    { "src": "/api/refresh", "dest": "api/refresh.js" },
-    { "src": "/api/teste", "dest": "api/teste.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/api/consulta",
+      "dest": "api/consulta.js"
+    },
+    {
+      "src": "/api/refresh",
+      "dest": "api/refresh.js"
+    },
+    {
+      "src": "/api/login",
+      "dest": "api/login.js"
+    },
+    {
+      "src": "/api/callback",
+      "dest": "api/callback.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
